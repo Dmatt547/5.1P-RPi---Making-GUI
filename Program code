@@ -1,0 +1,54 @@
+from tkinter import *
+import tkinter.font
+from gpiozero import LED
+import RPi.GPIO
+RPi.GPIO.setmode(RPi.GPIO.BCM)
+
+# Initialize LEDs
+red_led = LED(14)
+green_led = LED(15)
+purple_led = LED(18)
+
+# GUI setup
+win = Tk()
+win.geometry('200x150')
+win.title("LED Controller")
+
+# Use custom font
+myFont = tkinter.font.Font(family='Helvetica', size=12, weight='bold')
+
+# Function to turn on the selected LED and off the others
+def led_control():
+    # Turn all LEDs off
+    red_led.off()
+    green_led.off()
+    purple_led.off()
+    # Turn the selected LED on
+    if led_choice.get() == "Red":
+        red_led.on()
+    elif led_choice.get() == "Green":
+        green_led.on()
+    elif led_choice.get() == "Purple":
+        purple_led.on()
+
+# Close function
+def close():
+    red_led.off()
+    green_led.off()
+    purple_led.off()
+    win.destroy()
+
+# Variable to hold the selected LED color
+led_choice = StringVar()
+
+# Radio buttons for LED selection
+Radiobutton(win, text="Red", font=myFont, variable=led_choice, value="Red", command=led_control).pack()
+Radiobutton(win, text="Green", font=myFont, variable=led_choice, value="Green", command=led_control).pack()
+Radiobutton(win, text="Purple", font=myFont, variable=led_choice, value="Purple", command=led_control).pack()
+
+# Exit button
+Button(win, text='Exit', font=myFont, command=close, bg='red', height=1, width=6).pack()
+
+win.protocol("WM_DELETE_WINDOW", close)
+
+win.mainloop()
